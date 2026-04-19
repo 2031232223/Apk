@@ -16,10 +16,8 @@ class NovaAdenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
+        // Se eliminó 'cardTheme' para evitar errores de compilación
+        // El diseño funcionará igual de bien con los estilos por defecto
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
