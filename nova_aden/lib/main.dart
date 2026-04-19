@@ -16,10 +16,11 @@ class NovaAdenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        // CORRECCIÓN: Usar CardThemeData en lugar de CardTheme
+        // CORRECCIÓN: Asignar CardThemeData correctamente a la propiedad cardTheme
         cardTheme: CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(0), // Opcional: ajustar márgenes si es necesario
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -29,5 +30,4 @@ class NovaAdenApp extends StatelessWidget {
       ),
       home: const DashboardScreen(),
     );
-  }
-}
+  }}
