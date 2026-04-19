@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/product.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/adaptive_text.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -12,7 +13,6 @@ class SalesScreen extends StatefulWidget {
 class _SalesScreenState extends State<SalesScreen> {
   final TextEditingController searchController = TextEditingController();
   
-  // Datos de ejemplo (esto vendrá de tu base de datos después)
   List<Product> products = [
     Product(id: 1, name: 'Arroz (1 lb)', code: 'ARR001', cost: 60, price: 180, stock: 50),
     Product(id: 2, name: 'Jabón de Baño', code: 'JAB001', cost: 45, price: 130, stock: 3),
@@ -28,7 +28,6 @@ class _SalesScreenState extends State<SalesScreen> {
   void addToCart(Product product, int quantity) {
     setState(() {
       var existingItemIndex = cart.indexWhere((item) => item['product'].id == product.id);
-      
       if (existingItemIndex != -1) {
         cart[existingItemIndex]['quantity'] += quantity;
       } else {
@@ -52,7 +51,6 @@ class _SalesScreenState extends State<SalesScreen> {
       appBar: AppBar(title: Text('Nueva Venta'), elevation: 0),
       drawer: const AppDrawer(),
       body: Column(children: [
-        // Buscador
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
@@ -67,7 +65,6 @@ class _SalesScreenState extends State<SalesScreen> {
           ),
         ),
         
-        // Lista de Productos
         Expanded(
           child: ListView.builder(
             itemCount: filteredProducts.length,
@@ -81,24 +78,23 @@ class _SalesScreenState extends State<SalesScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  subtitle: Text('${product.code}', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  title: AdaptiveText(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  subtitle: AdaptiveText(product.code, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)} CUP',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
+                      // Precio ajustable
+                      AdaptiveText('\$${product.price.toStringAsFixed(2)} CUP', 
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
                       const SizedBox(width: 8),
                       if (isLowStock)
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(color: Colors.red[100], borderRadius: BorderRadius.circular(12)),
-                          child: Text('${product.stock} unid', style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12)),
+                          child: AdaptiveText('${product.stock} unid', style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12)),
                         )
                       else
-                        Text('${product.stock} unid', style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.bold)),
+                        AdaptiveText('${product.stock} unid', style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.bold)),
                     ],
                   ),
                   onTap: () => addToCart(product, 1),
@@ -108,7 +104,6 @@ class _SalesScreenState extends State<SalesScreen> {
           ),
         ),
 
-        // Panel Inferior: Teclado y Carrito
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -118,29 +113,28 @@ class _SalesScreenState extends State<SalesScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Sección del Carrito y Total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Carrito:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text('${cart.length} items', style: const TextStyle(color: Colors.blue)),
+                      const AdaptiveText('Carrito:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      AdaptiveText('${cart.length} items', style: const TextStyle(color: Colors.blue)),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text('Total:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text('\$${getSubtotal().toStringAsFixed(2)} CUP', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+                      const AdaptiveText('Total:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      // El total aquí también se ajustará si es muy grande
+                      AdaptiveText('\$${getSubtotal().toStringAsFixed(2)} CUP', 
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
                     ],
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              
-              // Botones de Acción
               Row(
                 children: [
                   Expanded(
@@ -152,7 +146,7 @@ class _SalesScreenState extends State<SalesScreen> {
                         });
                       },
                       icon: const Icon(Icons.delete_outline),
-                      label: const Text('Limpiar'),
+                      label: const AdaptiveText('Limpiar'),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -163,9 +157,9 @@ class _SalesScreenState extends State<SalesScreen> {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton.icon(
-                      onPressed: () {}, // Aquí iría la lógica de cobro
+                      onPressed: () {},
                       icon: const Icon(Icons.payment),
-                      label: const Text('Cobrar'),
+                      label: const AdaptiveText('Cobrar'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,

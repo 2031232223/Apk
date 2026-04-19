@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'adaptive_text.dart'; // Importamos el widget inteligente
 
 class SummaryCard extends StatelessWidget {
   final String title;
@@ -18,14 +19,9 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determinamos el tamaño de fuente basado en la longitud del valor
-    double fontSize = 24.0;
-    if (value.length > 10) fontSize = 16.0;
-    if (value.length > 15) fontSize = 14.0;
-    if (value.length > 20) fontSize = 12.0;
-
     return Card(
       elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -33,24 +29,24 @@ class SummaryCard extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
+                  AdaptiveText(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
                   const SizedBox(height: 8),
-                  // Usamos Text.rich o ajustamos el estilo dinámicamente
-                  Text(
+                  // AQUÍ ESTÁ LA MAGIA: AdaptiveText ajusta el tamaño automáticamente
+                  AdaptiveText(
                     value, 
                     style: TextStyle(
-                      fontSize: fontSize,
+                      fontSize: 24.0, // Base
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor,
-                      height: 1.1, // Reduce espacio vertical si es necesario
+                      height: 1.1,
                     ),
-                    overflow: TextOverflow.ellipsis, // Corta el texto si es imposible mostrarlo
-                    maxLines: 2, // Limita a 2 líneas
+                    maxLines: 2,
                   ),
                   if (subtitle != null) ...[
                     const SizedBox(height: 4),
-                    Text(subtitle!, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[500])),
+                    AdaptiveText(subtitle!, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[500])),
                   ],
                 ],
               ),

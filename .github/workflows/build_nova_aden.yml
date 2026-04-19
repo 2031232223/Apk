@@ -30,13 +30,12 @@ jobs:
         working-directory: ./nova_aden
         run: flutter pub get
 
+      # CORRECCIÓN: Ignorar infos y warnings para que el análisis pase
       - name: Analyze project
         working-directory: ./nova_aden
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # CORRECCIÓN: 
-      # --split-per-abi SE ELIMINÓ para generar UN SOLO APK UNIVERSAL.
-      # Esto incluye todas las arquitecturas (arm64, armeabi-v7a, x86) en un solo archivo.
+      # CORRECCIÓN: --release SIN --split-per-abi para generar UN SOLO APK UNIVERSAL
       - name: Build Universal APK
         working-directory: ./nova_aden
         run: flutter build apk --release

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/product.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/adaptive_text.dart'; // Importamos el nuevo widget
 
 class ProductsScreen extends StatelessWidget {
   const ProductsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Datos de ejemplo
     List<Product> products = [
       Product(id: 1, name: 'Arroz (1 lb)', code: 'ARR001', cost: 60, price: 180, stock: 50, unit: 'lb'),
       Product(id: 2, name: 'Jabón de Baño', code: 'JAB001', cost: 45, price: 130, stock: 3, unit: 'unidad'),
@@ -24,12 +24,12 @@ class ProductsScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('7 productos activos', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
+            AdaptiveText('7 productos activos', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
             const SizedBox(height: 12),
             Row(children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () {}, // Lógica de nuevo producto
+                  onPressed: () {},
                   icon: const Icon(Icons.add),
                   label: const Text('Nuevo Producto'),
                   style: ElevatedButton.styleFrom(
@@ -52,30 +52,18 @@ class ProductsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            // Filtros simples
             Row(children: [
               Expanded(child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  hint: const Text('Todas'),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  items: const [DropdownMenuItem(value: 'all', child: Text('Todas'))],
-                  onChanged: (value) {},
-                ),
+                child: DropdownButton<String>(hint: const Text('Todas'), icon: const Icon(Icons.arrow_drop_down), items: const [DropdownMenuItem(value: 'all', child: Text('Todas'))], onChanged: (value) {}),
               )),
               const SizedBox(width: 8),
               Expanded(child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  hint: const Text('Todo el stock'),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  items: const [DropdownMenuItem(value: 'all', child: Text('Todo el stock'))],
-                  onChanged: (value) {},
-                ),
+                child: DropdownButton<String>(hint: const Text('Todo el stock'), icon: const Icon(Icons.arrow_drop_down), items: const [DropdownMenuItem(value: 'all', child: Text('Todo el stock'))], onChanged: (value) {}),
               )),
             ]),
           ]),
         ),
         
-        // Lista de Productos
         Expanded(
           child: ListView.builder(
             itemCount: products.length,
@@ -94,18 +82,24 @@ class ProductsScreen extends StatelessWidget {
                     Row(children: [
                       Icon(Icons.star, color: Colors.orange[700], size: 16),
                       const SizedBox(width: 8),
-                      Expanded(child: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                      Expanded(child: AdaptiveText(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
                     ]),
                     const SizedBox(height: 4),
-                    Text(product.code, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    AdaptiveText(product.code, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                     const Divider(height: 20),
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text('\$${product.price.toStringAsFixed(2)} CUP', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue)),
-                        Text('\$${product.cost.toStringAsFixed(2)} MLC', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                        // AQUÍ SE APLICA EL AJUSTE AUTOMÁTICO AL PRECIO CUP
+                        AdaptiveText('\$${product.price.toStringAsFixed(2)} CUP', 
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue)),
+                        // AQUÍ SE APLICA EL AJUSTE AUTOMÁTICO AL PRECIO MLC
+                        AdaptiveText('\$${product.cost.toStringAsFixed(2)} MLC', 
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                       ]),
                       Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                        Text('${product.stock} ${product.unit}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        // AQUÍ SE APLICA EL AJUSTE AUTOMÁTICO AL STOCK
+                        AdaptiveText('${product.stock} ${product.unit}', 
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         if (isLowStock) ...[
                           const SizedBox(height: 4),
                           Container(
@@ -114,7 +108,7 @@ class ProductsScreen extends StatelessWidget {
                             child: Row(mainAxisSize: MainAxisSize.min, children: [
                               Icon(Icons.warning_amber, color: Colors.red[700], size: 12),
                               const SizedBox(width: 4),
-                              Text('Stock bajo', style: TextStyle(color: Colors.red[700], fontSize: 10, fontWeight: FontWeight.bold)),
+                              AdaptiveText('Stock bajo', style: TextStyle(color: Colors.red[700], fontSize: 10, fontWeight: FontWeight.bold)),
                             ]),
                           ),
                         ],
