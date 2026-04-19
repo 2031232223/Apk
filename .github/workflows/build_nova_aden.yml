@@ -1,4 +1,4 @@
-name: Build nova-ADEN (Linux & Android)
+name: Build nova-ADEN (Android Only)
 
 on:
   push:
@@ -11,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Configurar Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -21,38 +23,29 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Install Linux dependencies
+      # 3. Instalar dependencias necesarias para Android (Gradle, JDK)
+      # Nota: Ubuntu ya trae las herramientas básicas, pero aseguramos el entorno
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsqlite3-dev libkeyutils-dev libsecret-1-dev
+          sudo apt-get install -y openjdk-17-jdk wget unzip
 
-      # 4. Obtener dependencias
+      # 4. Obtener dependencias de Flutter
       - name: Get dependencies
         working-directory: ./nova_aden
         run: flutter pub get
 
-      # 5. Analizar código (CORREGIDO: Ignora infos y warnings)
+      # 5. Analizar código (Ignora sugerencias)
       - name: Analyze project
         working-directory: ./nova_aden
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # 6. Compilar para Linux
-      - name: Build for Linux
-        working-directory: ./nova_aden
-        run: flutter build linux --release
-
-      # 7. Compilar para Android (APK)
+      # 6. Compilar SOLO para Android (APK)
       - name: Build for Android (APK)
         working-directory: ./nova_aden
         run: flutter build apk --release --split-per-abi
 
-      # 8. Subir artefactos
-      - name: Upload Linux Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: nova-aden-linux-build
-          path: nova_aden/build/linux/x64/release/bundle/
-
+      # 7. Subir artefactos (Solo APKs)
       - name: Upload Android APKs
         uses: actions/upload-artifact@v4
         with:
