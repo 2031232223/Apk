@@ -1,4 +1,4 @@
-name: Build nova-ADEN (Android Only)
+name: Build nova-ADEN (Android Universal)
 
 on:
   push:
@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Configurar Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -23,31 +21,28 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 3. Instalar dependencias necesarias para Android (Gradle, JDK)
-      # Nota: Ubuntu ya trae las herramientas básicas, pero aseguramos el entorno
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk wget unzip
 
-      # 4. Obtener dependencias de Flutter
       - name: Get dependencies
         working-directory: ./nova_aden
         run: flutter pub get
 
-      # 5. Analizar código (Ignora sugerencias)
       - name: Analyze project
         working-directory: ./nova_aden
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # 6. Compilar SOLO para Android (APK)
-      - name: Build for Android (APK)
+      # CORRECCIÓN: 
+      # --split-per-abi SE ELIMINÓ para generar UN SOLO APK UNIVERSAL.
+      # Esto incluye todas las arquitecturas (arm64, armeabi-v7a, x86) en un solo archivo.
+      - name: Build Universal APK
         working-directory: ./nova_aden
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release
 
-      # 7. Subir artefactos (Solo APKs)
-      - name: Upload Android APKs
+      - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: nova-aden-android-apks
+          name: nova-aden-universal-apk
           path: nova_aden/build/app/outputs/flutter-apk/*.apk
