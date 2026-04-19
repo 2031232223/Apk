@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'presentation/screens/dashboard_screen.dart';
+import 'presentation/screens/sales_screen.dart';
+import 'presentation/screens/products_screen.dart';
 
 void main() {
   runApp(const NovaAdenApp());
@@ -16,15 +18,16 @@ class NovaAdenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        // Se eliminó 'cardTheme' para evitar errores de compilación
-        // El diseño funcionará igual de bien con los estilos por defecto
+        cardTheme: CardThemeData(elevation: 2, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
+          style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
         ),
       ),
       home: const DashboardScreen(),
+      routes: {
+        '/sales': (context) => const SalesScreen(),
+        '/products': (context) => const ProductsScreen(),
+      },
     );
   }
 }
