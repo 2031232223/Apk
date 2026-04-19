@@ -1,0 +1,66 @@
+name: Build nova-ADEN (Linux & Android)
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configurar Flutter (Versión estable compatible con tu proyecto)
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      # 3. Instalar dependencias del sistema para Linux (Requisito para Nova GNU/Linux)
+      # Instala GTK3, CMake, Ninja y librerías necesarias para compilar en escritorio Linux
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsqlite3-dev libkeyutils-dev libsecret-1-dev
+
+      # 4. Obtener dependencias de Flutter
+      # IMPORTANTE: working-directory entra a la carpeta 'nova_aden' donde está el pubspec.yaml
+      - name: Get dependencies
+        working-directory: ./nova_aden
+        run: flutter pub get
+
+      # 5. Analizar código (Validación de calidad según RnF 9 y 10)
+      - name: Analyze project
+        working-directory: ./nova_aden
+        run: flutter analyze
+
+      # 6. Compilar para Linux (Executable nativo para Nova GNU/Linux)
+      - name: Build for Linux
+        working-directory: ./nova_aden
+        run: flutter build linux --release
+
+      # 7. Compilar para Android (APK Universal)
+      - name: Build for Android (APK)
+        working-directory: ./nova_aden
+        run: flutter build apk --release --split-per-abi
+
+      # 8. Subir artefactos (Builds) para descarga
+      # Sube el bundle completo de Linux
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-aden-linux-build
+          path: nova_aden/build/linux/x64/release/bundle/
+
+      # Sube los APKs generados (arm64, armeabi-v7a, x86_64)
+      - name: Upload Android APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-aden-android-apks
+          path: nova_aden/build/app/outputs/flutter-apk/*.apk
