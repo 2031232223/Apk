@@ -16,7 +16,6 @@ class NovaAdenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        // CORRECCIÓN CRÍTICA: CardThemeData debe ser asignado como propiedad
         cardTheme: CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
