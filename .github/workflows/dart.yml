@@ -1,0 +1,59 @@
+name: Build nova-ADEN (Linux & Android)
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configurar Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0' # Versión estable compatible con tu proyecto
+          channel: 'stable'
+          cache: true
+
+      # 3. Instalar dependencias del sistema para Linux (Nova GNU/Linux base)
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev libsqlite3-dev libkeyutils-dev libsecret-1-dev
+
+      # 4. Obtener dependencias de Flutter
+      - name: Get dependencies
+        run: flutter pub get
+
+      # 5. Analizar código (Opcional pero recomendado para calidad)
+      - name: Analyze project
+        run: flutter analyze
+
+      # 6. Compilar para Linux (Executable)
+      - name: Build for Linux
+        run: flutter build linux --release
+
+      # 7. Compilar para Android (APK)
+      # Nota: Requiere configurar keystore para firma de producción, aquí usamos debug para CI
+      - name: Build for Android (APK)
+        run: flutter build apk --release --split-per-abi
+
+      # 8. Subir artefactos (Builds)
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-aden-linux-build
+          path: build/linux/x64/release/bundle/
+
+      - name: Upload Android APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-aden-android-apks
+          path: build/app/outputs/flutter-apk/*.apk
