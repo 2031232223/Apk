@@ -9,6 +9,7 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
+          // CORRECCIÓN: Se elimina 'const' aquí porque usa Theme.of(context)
           DrawerHeader(
             decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             child: Column(
