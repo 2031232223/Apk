@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/summary_card.dart';
-import '../widgets/sales_chart.dart'; // Asegúrate de que este archivo exista
-import '../widgets/low_stock_list.dart'; // Asegúrate de que este archivo exista
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -87,7 +85,7 @@ class DashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             
-            // Gráfico de Ventas
+            // Gráfico de Ventas (Simulado)
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -98,7 +96,6 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Text('Ventas últimos 7 días', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
-                    // Aquí iría tu widget SalesChart si lo tienes
                     Container(
                       height: 150,
                       decoration: BoxDecoration(
@@ -132,7 +129,6 @@ class DashboardScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    // Ejemplo de lista de productos con stock bajo
                     ListTile(
                       leading: const Icon(Icons.warning_amber, color: Colors.red),
                       title: const Text('Jabón de Baño'),

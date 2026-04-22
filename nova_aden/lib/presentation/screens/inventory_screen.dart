@@ -13,7 +13,6 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
   late TabController _tabController;
   bool showAdjustDialog = false;
 
-  // Datos simulados
   final List<Map<String, dynamic>> products = [
     {'code': 'ARR001', 'name': 'Arroz (1 lb)', 'stock': 50, 'unit': 'lb', 'cost': 120.00, 'sale': 600.00, 'status': 'OK'},
     {'code': 'JAB001', 'name': 'Jabón de Baño', 'stock': 3, 'unit': 'unidad', 'cost': 80.00, 'sale': 240.00, 'status': 'Bajo'},
@@ -45,7 +44,8 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
   }
 
   int getTotalUnits() {
-    return products.fold(0, (sum, item) => sum + item['stock']);
+    // CORRECCIÓN: Convertir el resultado num a int
+    return products.fold(0, (sum, item) => sum + item['stock'].toInt()).round();
   }
 
   int getLowStockCount() {
@@ -129,7 +129,7 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     title: const AdaptiveText('Total Unidades'),
-                    subtitle: const AdaptiveText('128', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    subtitle: const AdaptiveText('${getTotalUnits()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                     trailing: IconButton(icon: const Icon(Icons.copy), onPressed: () {}),
                   ),
                 ),
@@ -140,7 +140,7 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     title: const AdaptiveText('Stock Bajo'),
-                    subtitle: const AdaptiveText('2 productos', style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold)),
+                    subtitle: AdaptiveText('${getLowStockCount()} productos', style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold)),
                     trailing: IconButton(icon: const Icon(Icons.trending_down), onPressed: () {}),
                   ),
                 ),
@@ -286,7 +286,6 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Lógica de confirmación
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ajuste confirmado')));
                             closeAdjustDialog();
                           },
