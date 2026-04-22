@@ -18,8 +18,6 @@ class NovaAdenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        // Se eliminó 'cardTheme' para evitar errores de compilación.
-        // Los widgets usan sus propios bordes redondeados.
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -27,6 +25,7 @@ class NovaAdenApp extends StatelessWidget {
         ),
       ),
       home: const DashboardScreen(),
+      // Definimos las rutas aquí para que el menú pueda encontrarlas
       routes: {
         '/sales': (context) => const SalesScreen(),
         '/products': (context) => const ProductsScreen(),
