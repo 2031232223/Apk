@@ -22,14 +22,21 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(leading: const Icon(Icons.dashboard), title: const Text('Dashboard'), onTap: () => Navigator.pop(context)),
           ListTile(leading: const Icon(Icons.point_of_sale), title: const Text('Punto de Venta'), onTap: () { Navigator.pop(context); Navigator.pushNamed(context, '/sales'); }),
-          ListTile(leading: const Icon(Icons.inventory_2), title: const Text('Inventario'), onTap: () { Navigator.pop(context); Navigator.pushNamed(context, '/products'); }),
-          // Botón COMPRAS - CORREGIDO PARA NO IR A LA ANTERIOR
+          // Botón INVENTARIO - CONECTADO AL NUEVO MÓDULO
+          ListTile(
+            leading: const Icon(Icons.inventory_2),
+            title: const Text('Inventario'),
+            onTap: () { 
+              Navigator.pop(context); // Cierra el menú
+              Navigator.pushNamed(context, '/inventory'); // Abre el nuevo módulo de inventario
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.receipt_long),
             title: const Text('Compras'),
             onTap: () { 
-              Navigator.pop(context); // Cierra el menú
-              Navigator.pushNamed(context, '/purchases'); // Abre Compras
+              Navigator.pop(context); 
+              Navigator.pushNamed(context, '/purchases'); 
             },
           ),
           ListTile(leading: const Icon(Icons.warning_amber), title: const Text('Mermas'), onTap: () => Navigator.pop(context)),
