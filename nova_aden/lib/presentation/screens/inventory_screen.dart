@@ -43,9 +43,9 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
     return products.fold(0.0, (sum, item) => sum + (item['sale'] * item['stock']));
   }
 
+  // CORRECCIÓN 1: Usar .round() explícito y asegurar tipo int
   int getTotalUnits() {
-    // CORRECCIÓN: Convertir el resultado num a int
-    return products.fold(0, (sum, item) => sum + item['stock'].toInt()).round();
+    return products.fold<int>(0, (sum, item) => sum + item['stock'].toInt());
   }
 
   int getLowStockCount() {
@@ -129,7 +129,8 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     title: const AdaptiveText('Total Unidades'),
-                    subtitle: const AdaptiveText('${getTotalUnits()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    // CORRECCIÓN 2: No usar const aquí si hay interpolación dinámica
+                    subtitle: AdaptiveText('${getTotalUnits()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                     trailing: IconButton(icon: const Icon(Icons.copy), onPressed: () {}),
                   ),
                 ),

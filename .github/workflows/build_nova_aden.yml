@@ -35,12 +35,11 @@ jobs:
         working-directory: ./nova_aden
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      # CORRECCIÓN: --release SIN --split-per-abi para generar UN SOLO APK UNIVERSAL
       - name: Build Universal APK
         working-directory: ./nova_aden
         run: flutter build apk --release
 
-      - name: Upload Universal APK
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: nova-aden-universal-apk
