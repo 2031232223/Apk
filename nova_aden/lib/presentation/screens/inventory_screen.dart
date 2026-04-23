@@ -43,9 +43,13 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
     return products.fold(0.0, (sum, item) => sum + (item['sale'] * item['stock']));
   }
 
-  // CORRECCIÓN DEFINITIVA: fold<int>(inicial, suma)
+  // CORRECCIÓN DEFINITIVA: Usar .toInt() explícito en cada elemento antes de sumar
   int getTotalUnits() {
-    return products.fold<int>(0, (sum, item) => sum + item['stock'].toInt());
+    int total = 0;
+    for (var item in products) {
+      total += item['stock'].toInt();
+    }
+    return total;
   }
 
   int getLowStockCount() {
